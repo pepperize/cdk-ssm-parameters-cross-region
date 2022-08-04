@@ -61,15 +61,15 @@ new StringParameter(scope, "PutParameter", {
 });
 ```
 
-See [StringParameter](./API.md#@pepperize/cdk-ssm-parameters-cross-region.StringParameter)
+See [StringParameter](./API.md#stringparameter-)
 
-### Reade AWS SSM Parameter cross-region
+### Read AWS SSM Parameter cross-region
 
 ```typescript
 StringParameter.fromStringParameterName(scope, "GetParameter", "eu-central-1", "/path/name/example");
 ```
 
-See [StringParameter.fromStringParameterName](./API.md#@pepperize/cdk-ssm-parameters-cross-region.StringParameter.fromStringParameterName)
+See [StringParameter.fromStringParameterName](./API.md#fromstringparametername-)
 
 ### Lookup AWS SSM Parameter cross-region
 
@@ -77,4 +77,4 @@ See [StringParameter.fromStringParameterName](./API.md#@pepperize/cdk-ssm-parame
 StringParameter.valueFromLookup(scope, "eu-central-1", "/path/name/example");
 ```
 
-See [StringParameter.valueFromLookup](./API.md#@pepperize/cdk-ssm-parameters-cross-region.StringParameter.valueFromLookup)
+See [StringParameter.valueFromLookup](./API.md#valuefromlookup-)
