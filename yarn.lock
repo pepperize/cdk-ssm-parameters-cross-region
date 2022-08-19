@@ -2359,9 +2359,9 @@ eslint-import-resolver-node@^0.3.6:
     resolve "^1.20.0"
 
 eslint-import-resolver-typescript@^3.2.6:
-  version "3.4.1"
-  resolved "https://registry.yarnpkg.com/eslint-import-resolver-typescript/-/eslint-import-resolver-typescript-3.4.1.tgz#072e5f7b4bf5d62d32d0b3a071fe551b45d15454"
-  integrity sha512-rcD4V2nnxk76JF6nuLcclGpya18KLhr/lwpl5xFXrVWZtdRSepfCGHk/oFn9HNstWX317Nuo/E3Z1vymPyPhlQ==
+  version "3.4.2"
+  resolved "https://registry.yarnpkg.com/eslint-import-resolver-typescript/-/eslint-import-resolver-typescript-3.4.2.tgz#9ee568aad73e63eee37b7b5344da5467806b90a3"
+  integrity sha512-8SuWlRIEO83X9PsJSK9VjgH0EDk1ZzNI36+r3C0xNYVJ+O1+TprOFtTwqqyPMHG+br/I9A5Q80RE7K3/eIr9XA==
   dependencies:
     debug "^4.3.4"
     enhanced-resolve "^5.10.0"
@@ -2369,7 +2369,7 @@ eslint-import-resolver-typescript@^3.2.6:
     globby "^13.1.2"
     is-core-module "^2.9.0"
     is-glob "^4.0.3"
-    synckit "^0.8.1"
+    synckit "^0.8.3"
 
 eslint-module-utils@^2.7.3:
   version "2.7.3"
@@ -3991,9 +3991,9 @@ jsii-diff@^1.62.0:
     yargs "^16.2.0"
 
 jsii-docgen@^7.0.52:
-  version "7.0.68"
-  resolved "https://registry.yarnpkg.com/jsii-docgen/-/jsii-docgen-7.0.68.tgz#7a96c8aeb545eaa8934ea1cf1cb3282537db7f68"
-  integrity sha512-PAbKKOuvJX3msKwzF2WlmVX3MNV06KRwEhdHMGElwFdfYOGXBQ81NYk3B79UKi7zSfSe1cWsVPaw+jMMCAiW1w==
+  version "7.0.70"
+  resolved "https://registry.yarnpkg.com/jsii-docgen/-/jsii-docgen-7.0.70.tgz#161ad26b75b78cdad7347841ba803a2b766cd1a8"
+  integrity sha512-SWVCW0Vxv4ocm49l1hX3TxWflJoUVQDimyQBeX8tcKksVYNKGlKjwRysr9STWgY4RW2XB8b0X+3QCKw/y1HV6Q==
   dependencies:
     "@jsii/spec" "^1.64.0"
     case "^1.6.3"
@@ -4034,13 +4034,32 @@ jsii-rosetta@^1.64.0:
     workerpool "^6.2.1"
     yargs "^16.2.0"
 
-jsii@1.64.0, jsii@^1.62.0:
+jsii@1.64.0:
   version "1.64.0"
   resolved "https://registry.yarnpkg.com/jsii/-/jsii-1.64.0.tgz#70cd2524fe215b18636d3130bd57a80d35af75f3"
   integrity sha512-n55/2afXTlkJus721xoP+4ahAwD3uFYYTJ+I2wVh5c7JZ5BU3Rnk/VEwUP9n7btzSGSOtIPSpsVj5ifixj+N7g==
   dependencies:
     "@jsii/check-node" "1.64.0"
     "@jsii/spec" "^1.64.0"
+    case "^1.6.3"
+    chalk "^4"
+    fast-deep-equal "^3.1.3"
+    fs-extra "^10.1.0"
+    log4js "^6.6.1"
+    semver "^7.3.7"
+    semver-intersect "^1.4.0"
+    sort-json "^2.0.1"
+    spdx-license-list "^6.6.0"
+    typescript "~3.9.10"
+    yargs "^16.2.0"
+
+jsii@^1.62.0:
+  version "1.65.0"
+  resolved "https://registry.yarnpkg.com/jsii/-/jsii-1.65.0.tgz#6d24b1d7095a6ad124ef2b178b1b961b312a4e9d"
+  integrity sha512-c/uYdygHfJWeQnWA7PyPeK1wxy3xAoGk9/MFC0j+cw2d8EUAHuLVBLh4pFv09AdBdpsRPdwUqAIHWDN39WKk0g==
+  dependencies:
+    "@jsii/check-node" "1.65.0"
+    "@jsii/spec" "^1.65.0"
     case "^1.6.3"
     chalk "^4"
     fast-deep-equal "^3.1.3"
@@ -5807,10 +5826,10 @@ symbol-tree@^3.2.4:
   resolved "https://registry.yarnpkg.com/symbol-tree/-/symbol-tree-3.2.4.tgz#430637d248ba77e078883951fb9aa0eed7c63fa2"
   integrity sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==
 
-synckit@^0.8.1:
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/synckit/-/synckit-0.8.1.tgz#697111240114a15a393fcb92786a4218bfead47f"
-  integrity sha512-rJEeygO5PNmcZICmrgnbOd2usi5zWE1ESc0Gn5tTmJlongoU8zCTwMFQtar2UgMSiR68vK9afPQ+uVs2lURSIA==
+synckit@^0.8.3:
+  version "0.8.3"
+  resolved "https://registry.yarnpkg.com/synckit/-/synckit-0.8.3.tgz#f36ca23fb7cbcf2b2b78c9e553ce6764dc6aa415"
+  integrity sha512-1goXnDYNJlKwCM37f5MTzRwo+8SqutgVtg2d37D6YnHHT4E3IhQMRfKiGdfTZU7LBlI6T8inCQUxnMBFHrbqWw==
   dependencies:
     "@pkgr/utils" "^2.3.0"
     tslib "^2.4.0"
