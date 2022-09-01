@@ -1,4 +1,4 @@
-import { Token } from "aws-cdk-lib/core";
+import { Token } from "aws-cdk-lib";
 
 export class Validators {
   /**
