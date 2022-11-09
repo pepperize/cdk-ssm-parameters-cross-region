@@ -2432,9 +2432,9 @@ eslint-visitor-keys@^3.3.0:
   integrity sha512-mQ+suqKJVyeuwGYHAdjMFqjCyfl8+Ldnxuyp3ldiMBFKkvytrXUZWaiPCEav8qDHKty44bD+qV1IP4T+w+xXRA==
 
 eslint@^8:
-  version "8.26.0"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-8.26.0.tgz#2bcc8836e6c424c4ac26a5674a70d44d84f2181d"
-  integrity sha512-kzJkpaw1Bfwheq4VXUezFriD1GxszX6dUekM7Z3aC2o4hju+tsR/XyTC3RcoSD7jmy9VkPU3+N6YjVU2e96Oyg==
+  version "8.27.0"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-8.27.0.tgz#d547e2f7239994ad1faa4bb5d84e5d809db7cf64"
+  integrity sha512-0y1bfG2ho7mty+SiILVf9PfuRA49ek4Nc60Wmmu62QlobNR+CeXa4xXIJgcuwSQgZiWaPH+5BDsctpIW0PR/wQ==
   dependencies:
     "@eslint/eslintrc" "^1.3.3"
     "@humanwhocodes/config-array" "^0.11.6"
@@ -4000,9 +4000,9 @@ jsii-diff@^1.62.0:
     yargs "^16.2.0"
 
 jsii-docgen@^7.0.52:
-  version "7.0.137"
-  resolved "https://registry.yarnpkg.com/jsii-docgen/-/jsii-docgen-7.0.137.tgz#bc2eb3c4a3e203115670228cb2557035f04dcd3c"
-  integrity sha512-7MXSFdTOc5qtaTGYeEpFr5O9atlT3yGsQM5sCjG2eDdhHy102tGz9j+4OKq0wyr+t7unHe77DZpqODFePSxa1w==
+  version "7.0.143"
+  resolved "https://registry.yarnpkg.com/jsii-docgen/-/jsii-docgen-7.0.143.tgz#faf0cb620622b6568f4a8f0ac199168127cde197"
+  integrity sha512-Sd9r2PP11/+Om7w0q36GGBz6neJ5e4j8/aMCu7enyXvRbIECZVcv/19LzEMRSS4Feao/jUJvtW2Lq7/dOZxcQQ==
   dependencies:
     "@jsii/spec" "^1.70.0"
     case "^1.6.3"
