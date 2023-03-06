@@ -11,7 +11,7 @@
     },
     {
       "name": "@types/node",
-      "version": "^12",
+      "version": "^14",
       "type": "build"
     },
     {
@@ -87,12 +87,7 @@
       "type": "build"
     },
     {
-      "name": "json-schema",
-      "type": "build"
-    },
-    {
-      "name": "npm-check-updates",
-      "version": "^12",
+      "name": "jsii-pacmak",
       "type": "build"
     },
     {
@@ -115,12 +110,26 @@
     },
     {
       "name": "ts-node",
-      "version": "^10",
       "type": "build"
     },
     {
       "name": "typescript",
       "type": "build"
+    },
+    {
+      "name": "projen",
+      "version": "^0.67.74",
+      "type": "devenv"
+    },
+    {
+      "name": "@types/babel__traverse",
+      "version": "7.18.2",
+      "type": "override"
+    },
+    {
+      "name": "@types/prettier",
+      "version": "2.6.0",
+      "type": "override"
     },
     {
       "name": "aws-cdk-lib",
