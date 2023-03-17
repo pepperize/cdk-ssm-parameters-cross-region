@@ -737,14 +737,6 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@jsii/check-node@1.77.0":
-  version "1.77.0"
-  resolved "https://registry.yarnpkg.com/@jsii/check-node/-/check-node-1.77.0.tgz#46e0e4201f5006cef0c5d11a1ce4b00b6ce27801"
-  integrity sha512-kgq4h5SrpIuM9CZ6uZVZ9KrJCPSn6zwz4y60ZEIFMA5aqkBN1n7MhTJglG6I8IaL2uYm7P5kZf6+eGNI+n3tig==
-  dependencies:
-    chalk "^4.1.2"
-    semver "^7.3.8"
-
 "@jsii/check-node@1.78.1":
   version "1.78.1"
   resolved "https://registry.yarnpkg.com/@jsii/check-node/-/check-node-1.78.1.tgz#3023d13d3b7077a3e764d7d34dd70671be1052d0"
