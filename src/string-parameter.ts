@@ -209,6 +209,7 @@ export class StringParameter extends ParameterBase implements ssm.IStringParamet
           Tags: this.tags.renderedTags,
           Tier: props.tier,
           Type: ssm.ParameterType.STRING,
+          Overwrite: true,
         },
         physicalResourceId: custom_resources.PhysicalResourceId.of(this.parameterArn),
       },
