@@ -189,7 +189,7 @@ Object {
           "Fn::Join": Array [
             "",
             Array [
-              "{\\"region\\":\\"eu-central-1\\",\\"service\\":\\"SSM\\",\\"action\\":\\"putParameter\\",\\"parameters\\":{\\"Name\\":\\"/path/name/integ/test\\",\\"Value\\":\\"Say hello from another region\\",\\"Type\\":\\"String\\"},\\"physicalResourceId\\":{\\"id\\":\\"arn:",
+              "{\\"region\\":\\"eu-central-1\\",\\"service\\":\\"SSM\\",\\"action\\":\\"putParameter\\",\\"parameters\\":{\\"Name\\":\\"/path/name/integ/test\\",\\"Value\\":\\"Say hello from another region\\",\\"Type\\":\\"String\\",\\"Overwrite\\":true},\\"physicalResourceId\\":{\\"id\\":\\"arn:",
               Object {
                 "Ref": "AWS::Partition",
               },

@@ -5,7 +5,7 @@ const project = new AwsCdkConstructLibrary({
   author: "Patrick Florek",
   authorAddress: "patrick.florek@gmail.com",
   cdkVersion: "2.1.0",
-  devDeps: ["@pepperize/projen-awscdk-construct"],
+  devDeps: ["@pepperize/projen-awscdk-construct@~0.0.730"],
   name: "@pepperize/cdk-ssm-parameters-cross-region",
   description: "Store, read and lookup AWS SSM Parameters cross-region",
   keywords: ["aws", "cdk", "ssm", "parameter", "parameter-store", "cross-region", "utilities"],
