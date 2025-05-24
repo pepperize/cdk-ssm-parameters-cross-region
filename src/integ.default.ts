@@ -27,4 +27,13 @@ const getParameter = StringParameter.fromStringParameterName(
 );
 getParameter.node.addDependency(putParameter);
 
+const arn = stack.formatArn({
+  service: "ssm",
+  resource: `parameter/path/name/integ/test`,
+  region: "eu-central-1",
+  account: env.account,
+});
+const getByArn = StringParameter.fromStringParameterArn(stack, "GetParameterByArn", arn);
+getByArn.node.addDependency(putParameter);
+
 app.synth();
