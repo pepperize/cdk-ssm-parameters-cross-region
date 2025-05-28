@@ -1,4 +1,4 @@
-import { ContextProvider, RemovalPolicy, Stack, TagManager, TagType, Tokenization } from "aws-cdk-lib";
+import { Arn, ArnFormat, ContextProvider, RemovalPolicy, Stack, TagManager, TagType, Tokenization } from "aws-cdk-lib";
 import * as ssm from "aws-cdk-lib/aws-ssm";
 import { IStringParameter } from "aws-cdk-lib/aws-ssm";
 import * as cxschema from "aws-cdk-lib/cloud-assembly-schema";
@@ -48,11 +48,26 @@ export interface StringParameterProps extends ParameterOptions {
   readonly removalPolicy?: RemovalPolicy;
 }
 
-export interface StringParameterAttributes extends ssm.StringParameterAttributes {
+// Make parameterName optional for the attributes interface
+export interface StringParameterAttributes extends Omit<ssm.StringParameterAttributes, "parameterName"> {
   /**
    * The region to retrieve the parameter from. See AWS.SSM.region for more information.
    */
-  readonly region: string;
+  readonly region?: string;
+
+  /**
+   * The ARN of the parameter. Use this or parameterName, but not both.
+   * If ARN is provided, region and account will be extracted from it.
+   */
+  readonly parameterArn?: string;
+
+  /**
+   * The name of the parameter store value if not using ARN.
+   *
+   * This value can be a token or a concrete string. If it is a concrete string
+   * and includes "/" it must also be prefixed with a "/" (fully-qualified).
+   */
+  readonly parameterName?: string;
 }
 
 const RESOURCE_TYPE = "Custom::SSM_String_Parameter_Cross_Region";
@@ -66,15 +81,33 @@ export class StringParameter extends ParameterBase implements ssm.IStringParamet
     id: string,
     attrs: StringParameterAttributes
   ): ssm.IStringParameter {
-    if (!attrs.parameterName) {
-      throw new Error("parameterName cannot be an empty string");
+    if (!attrs.parameterName && !attrs.parameterArn) {
+      throw new Error("Either parameterName or parameterArn must be provided.");
+    }
+    if (attrs.parameterName && attrs.parameterArn) {
+      throw new Error("Provide either parameterName or parameterArn, not both.");
+    }
+
+    let { parameterName, region, parameterArn } = attrs;
+
+    if (parameterArn) {
+      const arnParts = Arn.split(parameterArn, ArnFormat.SLASH_RESOURCE_NAME);
+      if (!arnParts.resourceName) {
+        throw new Error("Invalid Parameter ARN: missing resource name.");
+      }
+      parameterName = arnParts.resourceName;
+      region = arnParts.region;
+    } else if (!attrs.region) {
+      throw new Error("region is required if parameterArn is not provided");
     }
 
     const parameterType = attrs.type ?? ssm.ParameterType.STRING;
 
-    const parameterName = attrs.version
-      ? `${attrs.parameterName}:${Tokenization.stringifyNumber(attrs.version)}`
-      : attrs.parameterName;
+    const versionedParameterName = attrs.version
+      ? `${parameterName}:${Tokenization.stringifyNumber(attrs.version)}`
+      : parameterName;
+
+    const ssmNameParameter = parameterArn || versionedParameterName;
 
     class Import extends ParameterBase {
       public readonly parameterName: string;
@@ -85,29 +118,31 @@ export class StringParameter extends ParameterBase implements ssm.IStringParamet
       constructor() {
         super(scope, id);
 
-        this.parameterArn = Stack.of(this).formatArn({
-          service: "ssm",
-          resource: `parameter${parameterName}`,
-          region: attrs.region,
-        });
+        this.parameterArn =
+          parameterArn ||
+          Stack.of(this).formatArn({
+            service: "ssm",
+            resource: `parameter${versionedParameterName}`,
+            region: region,
+          });
 
         const parameter = new custom_resources.AwsCustomResource(this, "Resource", {
           resourceType: RESOURCE_TYPE,
           onCreate: {
-            region: attrs.region,
+            region: region,
             service: "SSM",
             action: "getParameter", // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/SSM.html#getParameter-property
             parameters: {
-              Name: parameterName,
+              Name: ssmNameParameter,
             },
             physicalResourceId: custom_resources.PhysicalResourceId.of(this.parameterArn),
           },
           onUpdate: {
-            region: attrs.region,
+            region: region, // region is needed for the SDK call endpoint
             service: "SSM",
             action: "getParameter", // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/SSM.html#getParameter-property
             parameters: {
-              Name: parameterName,
+              Name: ssmNameParameter,
             },
             physicalResourceId: custom_resources.PhysicalResourceId.of(this.parameterArn),
           },
@@ -116,7 +151,7 @@ export class StringParameter extends ParameterBase implements ssm.IStringParamet
           }),
         });
 
-        this.parameterName = attrs.parameterName;
+        this.parameterName = parameterName!; // parameterName is guaranteed to be defined here
         this.parameterType = parameterType;
         this.stringValue = parameter.getResponseField("Parameter.Value");
       }
@@ -135,6 +170,15 @@ export class StringParameter extends ParameterBase implements ssm.IStringParamet
     parameterName: string
   ): IStringParameter {
     return this.fromStringParameterAttributes(scope, id, { parameterName: parameterName, region: region });
+  }
+
+  /**
+   * Imports an external string parameter by ARN.
+   */
+  public static fromStringParameterArn(scope: Construct, id: string, arn: string): IStringParameter {
+    return StringParameter.fromStringParameterAttributes(scope, id, {
+      parameterArn: arn,
+    });
   }
 
   /**
