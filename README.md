@@ -70,7 +70,18 @@ See [StringParameter](https://github.com/pepperize/cdk-ssm-parameters-cross-regi
 StringParameter.fromStringParameterName(scope, "GetParameter", "eu-central-1", "/path/name/example");
 ```
 
-See [StringParameter.fromStringParameterName](https://github.com/pepperize/cdk-ssm-parameters-cross-region/blob/main//API.md#fromstringparametername-)
+### Import AWS SSM Parameter cross-region by ARN
+
+```typescript
+// import using ARN, supports cross-account
+const arn = Stack.of(scope).formatArn({
+  service: 'ssm',
+  resource: `parameter/path/name/example`,
+  region: 'eu-central-1',
+  account: '123456789012'
+});
+StringParameter.fromStringParameterArn(scope, 'GetByArn', arn);
+```
 
 ### Lookup AWS SSM Parameter cross-region
 
