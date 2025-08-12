@@ -21,6 +21,11 @@ describe("StringParameter", () => {
     );
     getParameter.node.addDependency(putParameter);
 
+    // When import by ARN
+    const arn = `arn:aws:ssm:eu-central-1:123456789012:parameter/path/name/integ/test`;
+    const getByArn = StringParameter.fromStringParameterArn(stack, "GetByArn", arn);
+    getByArn.node.addDependency(putParameter);
+
     // Then
     const template = Template.fromStack(stack);
     expect(template).toMatchSnapshot();

@@ -64,6 +64,52 @@ Object {
       },
       "Type": "AWS::IAM::Role",
     },
+    "GetByArnCustomResourcePolicy3524B48B": Object {
+      "DependsOn": Array [
+        "PutParameterCustomResourcePolicy3B520E2B",
+        "PutParameter9BA39D58",
+      ],
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "ssm:GetParameter",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "GetByArnCustomResourcePolicy3524B48B",
+        "Roles": Array [
+          Object {
+            "Ref": "AWS679f53fac002430cb0da5b7982bd2287ServiceRoleC1EA0FF2",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "GetByArnD4C43426": Object {
+      "DeletionPolicy": "Delete",
+      "DependsOn": Array [
+        "GetByArnCustomResourcePolicy3524B48B",
+        "PutParameterCustomResourcePolicy3B520E2B",
+        "PutParameter9BA39D58",
+      ],
+      "Properties": Object {
+        "Create": "{\\"region\\":\\"eu-central-1\\",\\"service\\":\\"SSM\\",\\"action\\":\\"getParameter\\",\\"parameters\\":{\\"Name\\":\\"arn:aws:ssm:eu-central-1:123456789012:parameter/path/name/integ/test\\"},\\"physicalResourceId\\":{\\"id\\":\\"arn:aws:ssm:eu-central-1:123456789012:parameter/path/name/integ/test\\"}}",
+        "InstallLatestAwsSdk": true,
+        "ServiceToken": Object {
+          "Fn::GetAtt": Array [
+            "AWS679f53fac002430cb0da5b7982bd22872D164C4C",
+            "Arn",
+          ],
+        },
+        "Update": "{\\"region\\":\\"eu-central-1\\",\\"service\\":\\"SSM\\",\\"action\\":\\"getParameter\\",\\"parameters\\":{\\"Name\\":\\"arn:aws:ssm:eu-central-1:123456789012:parameter/path/name/integ/test\\"},\\"physicalResourceId\\":{\\"id\\":\\"arn:aws:ssm:eu-central-1:123456789012:parameter/path/name/integ/test\\"}}",
+      },
+      "Type": "Custom::SSM_String_Parameter_Cross_Region",
+      "UpdateReplacePolicy": "Delete",
+    },
     "GetParameterCustomResourcePolicyDE2625D5": Object {
       "DependsOn": Array [
         "PutParameterCustomResourcePolicy3B520E2B",
