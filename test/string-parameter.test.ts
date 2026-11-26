@@ -25,4 +25,27 @@ describe("StringParameter", () => {
     const template = Template.fromStack(stack);
     expect(template).toMatchSnapshot();
   });
+
+  it("Should expose parameterRef", () => {
+    // Given
+    const stack = new Stack();
+
+    // When
+    const putParameter = new StringParameter(stack, "PutParameter", {
+      region: "eu-central-1",
+      parameterName: "/path/name",
+      stringValue: "value",
+    });
+    const getParameter = StringParameter.fromStringParameterName(stack, "GetParameter", "eu-central-1", "/path/name");
+
+    // Then
+    expect(putParameter.parameterRef).toEqual({
+      parameterName: "/path/name",
+      parameterArn: putParameter.parameterArn,
+    });
+    expect(getParameter.parameterRef).toEqual({
+      parameterName: "/path/name",
+      parameterArn: getParameter.parameterArn,
+    });
+  });
 });
