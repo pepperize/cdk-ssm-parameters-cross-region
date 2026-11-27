@@ -41,6 +41,13 @@ export abstract class ParameterBase extends Resource implements ssm.IParameter {
   public abstract readonly parameterName: string;
   public abstract readonly parameterType: string;
 
+  public get parameterRef(): ssm.ParameterReference {
+    return {
+      parameterName: this.parameterName,
+      parameterArn: this.parameterArn,
+    };
+  }
+
   public grantRead(grantee: iam.IGrantable): iam.Grant {
     return iam.Grant.addToPrincipal({
       grantee,
