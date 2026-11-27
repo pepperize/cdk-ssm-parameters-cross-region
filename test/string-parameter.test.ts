@@ -1,5 +1,5 @@
-import { Stack } from "aws-cdk-lib";
-import { Template } from "aws-cdk-lib/assertions";
+import { Stack, Tags } from "aws-cdk-lib";
+import { Match, Template } from "aws-cdk-lib/assertions";
 import { StringParameter } from "../src";
 
 describe("StringParameter", () => {
@@ -21,13 +21,57 @@ describe("StringParameter", () => {
     );
     getParameter.node.addDependency(putParameter);
 
-    // When import by ARN
-    const arn = `arn:aws:ssm:eu-central-1:123456789012:parameter/path/name/integ/test`;
-    const getByArn = StringParameter.fromStringParameterArn(stack, "GetByArn", arn);
-    getByArn.node.addDependency(putParameter);
-
     // Then
     const template = Template.fromStack(stack);
     expect(template).toMatchSnapshot();
+  });
+
+  it("Should expose parameterRef", () => {
+    // Given
+    const stack = new Stack();
+
+    // When
+    const putParameter = new StringParameter(stack, "PutParameter", {
+      region: "eu-central-1",
+      parameterName: "/path/name",
+      stringValue: "value",
+    });
+    const getParameter = StringParameter.fromStringParameterName(stack, "GetParameter", "eu-central-1", "/path/name");
+
+    // Then
+    expect(putParameter.parameterRef).toEqual({
+      parameterName: "/path/name",
+      parameterArn: putParameter.parameterArn,
+    });
+    expect(getParameter.parameterRef).toEqual({
+      parameterName: "/path/name",
+      parameterArn: getParameter.parameterArn,
+    });
+  });
+
+  it("Should allow tagging the parameter", () => {
+    // Given
+    const stack = new Stack();
+
+    // When
+    const parameter = new StringParameter(stack, "PutParameter", {
+      region: "eu-central-1",
+      parameterName: "/path/name",
+      stringValue: "value",
+    });
+    Tags.of(parameter).add("key", "value");
+
+    // Then
+    const template = Template.fromStack(stack);
+    template.hasResourceProperties("AWS::IAM::Policy", {
+      PolicyDocument: {
+        Statement: Match.arrayWith([
+          Match.objectLike({
+            Action: "ssm:AddTagsToResource",
+            Effect: "Allow",
+          }),
+        ]),
+      },
+    });
   });
 });
