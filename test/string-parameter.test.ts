@@ -1,5 +1,5 @@
-import { Stack } from "aws-cdk-lib";
-import { Template } from "aws-cdk-lib/assertions";
+import { Stack, Tags } from "aws-cdk-lib";
+import { Match, Template } from "aws-cdk-lib/assertions";
 import { StringParameter } from "../src";
 
 describe("StringParameter", () => {
@@ -46,6 +46,32 @@ describe("StringParameter", () => {
     expect(getParameter.parameterRef).toEqual({
       parameterName: "/path/name",
       parameterArn: getParameter.parameterArn,
+    });
+  });
+
+  it("Should allow tagging the parameter", () => {
+    // Given
+    const stack = new Stack();
+
+    // When
+    const parameter = new StringParameter(stack, "PutParameter", {
+      region: "eu-central-1",
+      parameterName: "/path/name",
+      stringValue: "value",
+    });
+    Tags.of(parameter).add("key", "value");
+
+    // Then
+    const template = Template.fromStack(stack);
+    template.hasResourceProperties("AWS::IAM::Policy", {
+      PolicyDocument: {
+        Statement: Match.arrayWith([
+          Match.objectLike({
+            Action: "ssm:AddTagsToResource",
+            Effect: "Allow",
+          }),
+        ]),
+      },
     });
   });
 });

@@ -1,4 +1,5 @@
 import { ContextProvider, RemovalPolicy, Stack, TagManager, TagType, Tokenization } from "aws-cdk-lib";
+import * as iam from "aws-cdk-lib/aws-iam";
 import * as ssm from "aws-cdk-lib/aws-ssm";
 import { IStringParameter } from "aws-cdk-lib/aws-ssm";
 import * as cxschema from "aws-cdk-lib/cloud-assembly-schema";
@@ -178,7 +179,7 @@ export class StringParameter extends ParameterBase implements ssm.IStringParamet
 
     const removalPolicy = props.removalPolicy ?? RemovalPolicy.DESTROY;
 
-    new custom_resources.AwsCustomResource(this, "Resource", {
+    const resource = new custom_resources.AwsCustomResource(this, "Resource", {
       resourceType: RESOURCE_TYPE,
       onCreate: {
         region: props.region,
@@ -229,6 +230,13 @@ export class StringParameter extends ParameterBase implements ssm.IStringParamet
         resources: custom_resources.AwsCustomResourcePolicy.ANY_RESOURCE,
       }),
     });
+
+    resource.grantPrincipal.addToPrincipalPolicy(
+      new iam.PolicyStatement({
+        actions: ["ssm:AddTagsToResource"],
+        resources: [this.parameterArn],
+      })
+    );
 
     this.parameterName = props.parameterName;
     this.parameterType = ssm.ParameterType.STRING;
