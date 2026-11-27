@@ -159,6 +159,7 @@ Grants write (PutParameter) permissions on the SSM Parameter.
 | <code><a href="#@pepperize/cdk-ssm-parameters-cross-region.StringParameter.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
 | <code><a href="#@pepperize/cdk-ssm-parameters-cross-region.StringParameter.isOwnedResource">isOwnedResource</a></code> | Returns true if the construct was created by CDK, and false otherwise. |
 | <code><a href="#@pepperize/cdk-ssm-parameters-cross-region.StringParameter.isResource">isResource</a></code> | Check whether the given construct is a Resource. |
+| <code><a href="#@pepperize/cdk-ssm-parameters-cross-region.StringParameter.fromStringParameterArn">fromStringParameterArn</a></code> | Imports an external string parameter by ARN, e.g. from another account. |
 | <code><a href="#@pepperize/cdk-ssm-parameters-cross-region.StringParameter.fromStringParameterAttributes">fromStringParameterAttributes</a></code> | Imports an external string parameter with name and optional version. |
 | <code><a href="#@pepperize/cdk-ssm-parameters-cross-region.StringParameter.fromStringParameterName">fromStringParameterName</a></code> | Imports an external string parameter by name and region. |
 | <code><a href="#@pepperize/cdk-ssm-parameters-cross-region.StringParameter.valueFromLookup">valueFromLookup</a></code> | Reads the value of an SSM parameter during synthesis through an environmental context provider. |
@@ -226,6 +227,36 @@ Check whether the given construct is a Resource.
 ###### `construct`<sup>Required</sup> <a name="construct" id="@pepperize/cdk-ssm-parameters-cross-region.StringParameter.isResource.parameter.construct"></a>
 
 - *Type:* constructs.IConstruct
+
+---
+
+##### `fromStringParameterArn` <a name="fromStringParameterArn" id="@pepperize/cdk-ssm-parameters-cross-region.StringParameter.fromStringParameterArn"></a>
+
+```typescript
+import { StringParameter } from '@pepperize/cdk-ssm-parameters-cross-region'
+
+StringParameter.fromStringParameterArn(scope: Construct, id: string, parameterArn: string)
+```
+
+Imports an external string parameter by ARN, e.g. from another account.
+
+Only the partition and account of the ARN may be tokens.
+
+###### `scope`<sup>Required</sup> <a name="scope" id="@pepperize/cdk-ssm-parameters-cross-region.StringParameter.fromStringParameterArn.parameter.scope"></a>
+
+- *Type:* constructs.Construct
+
+---
+
+###### `id`<sup>Required</sup> <a name="id" id="@pepperize/cdk-ssm-parameters-cross-region.StringParameter.fromStringParameterArn.parameter.id"></a>
+
+- *Type:* string
+
+---
+
+###### `parameterArn`<sup>Required</sup> <a name="parameterArn" id="@pepperize/cdk-ssm-parameters-cross-region.StringParameter.fromStringParameterArn.parameter.parameterArn"></a>
+
+- *Type:* string
 
 ---
 

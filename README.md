@@ -70,6 +70,8 @@ See [StringParameter](https://github.com/pepperize/cdk-ssm-parameters-cross-regi
 StringParameter.fromStringParameterName(scope, "GetParameter", "eu-central-1", "/path/name/example");
 ```
 
+See [StringParameter.fromStringParameterName](https://github.com/pepperize/cdk-ssm-parameters-cross-region/blob/main//API.md#fromstringparametername-)
+
 ### Import AWS SSM Parameter cross-region by ARN
 
 ```typescript
@@ -82,6 +84,8 @@ const arn = Stack.of(scope).formatArn({
 });
 StringParameter.fromStringParameterArn(scope, 'GetByArn', arn);
 ```
+
+See [StringParameter.fromStringParameterArn](https://github.com/pepperize/cdk-ssm-parameters-cross-region/blob/main//API.md#fromstringparameterarn-)
 
 ### Lookup AWS SSM Parameter cross-region
 

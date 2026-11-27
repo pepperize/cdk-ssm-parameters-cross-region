@@ -1,4 +1,4 @@
-import { ContextProvider, RemovalPolicy, Stack, TagManager, TagType, Tokenization } from "aws-cdk-lib";
+import { ContextProvider, RemovalPolicy, Stack, TagManager, TagType, Token, Tokenization } from "aws-cdk-lib";
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as ssm from "aws-cdk-lib/aws-ssm";
 import { IStringParameter } from "aws-cdk-lib/aws-ssm";
@@ -77,53 +77,17 @@ export class StringParameter extends ParameterBase implements ssm.IStringParamet
       ? `${attrs.parameterName}:${Tokenization.stringifyNumber(attrs.version)}`
       : attrs.parameterName;
 
-    class Import extends ParameterBase {
-      public readonly parameterName: string;
-      public readonly parameterArn: string;
-      public readonly parameterType: ssm.ParameterType;
-      public readonly stringValue: string;
-
-      constructor() {
-        super(scope, id);
-
-        this.parameterArn = Stack.of(this).formatArn({
-          service: "ssm",
-          resource: `parameter${parameterName}`,
-          region: attrs.region,
-        });
-
-        const parameter = new custom_resources.AwsCustomResource(this, "Resource", {
-          resourceType: RESOURCE_TYPE,
-          onCreate: {
-            region: attrs.region,
-            service: "SSM",
-            action: "getParameter", // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/SSM.html#getParameter-property
-            parameters: {
-              Name: parameterName,
-            },
-            physicalResourceId: custom_resources.PhysicalResourceId.of(this.parameterArn),
-          },
-          onUpdate: {
-            region: attrs.region,
-            service: "SSM",
-            action: "getParameter", // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/SSM.html#getParameter-property
-            parameters: {
-              Name: parameterName,
-            },
-            physicalResourceId: custom_resources.PhysicalResourceId.of(this.parameterArn),
-          },
-          policy: custom_resources.AwsCustomResourcePolicy.fromSdkCalls({
-            resources: custom_resources.AwsCustomResourcePolicy.ANY_RESOURCE,
-          }),
-        });
-
-        this.parameterName = attrs.parameterName;
-        this.parameterType = parameterType;
-        this.stringValue = parameter.getResponseField("Parameter.Value");
-      }
-    }
-
-    return new Import();
+    return importStringParameter(scope, id, {
+      region: attrs.region,
+      name: parameterName,
+      parameterArn: Stack.of(scope).formatArn({
+        service: "ssm",
+        resource: `parameter${parameterName}`,
+        region: attrs.region,
+      }),
+      parameterName: attrs.parameterName,
+      parameterType: parameterType,
+    });
   }
 
   /**
@@ -136,6 +100,31 @@ export class StringParameter extends ParameterBase implements ssm.IStringParamet
     parameterName: string
   ): IStringParameter {
     return this.fromStringParameterAttributes(scope, id, { parameterName: parameterName, region: region });
+  }
+
+  /**
+   * Imports an external string parameter by ARN, e.g. from another account.
+   *
+   * Only the partition and account of the ARN may be tokens.
+   */
+  public static fromStringParameterArn(scope: Construct, id: string, parameterArn: string): IStringParameter {
+    // arn:partition:ssm:region:account:parameter/name, the partition and account may be tokens
+    const [, , service, region, , resource = ""] = parameterArn.split(":");
+    if (Token.isUnresolved(region ?? parameterArn) || Token.isUnresolved(resource)) {
+      throw new Error("parameterArn must not be a token, except for partition and account");
+    }
+    const [resourceType, ...resourceName] = resource.split("/");
+    if (service !== "ssm" || resourceType !== "parameter" || !region || !resourceName.length) {
+      throw new Error(`Invalid SSM parameter ARN: ${parameterArn}`);
+    }
+
+    return importStringParameter(scope, id, {
+      region: region,
+      name: parameterArn,
+      parameterArn: parameterArn,
+      parameterName: resourceName.length > 1 ? `/${resourceName.join("/")}` : resourceName[0],
+      parameterType: ssm.ParameterType.STRING,
+    });
   }
 
   /**
@@ -242,4 +231,53 @@ export class StringParameter extends ParameterBase implements ssm.IStringParamet
     this.parameterType = ssm.ParameterType.STRING;
     this.stringValue = props.stringValue;
   }
+}
+
+interface ImportStringParameterOptions {
+  readonly region: string;
+  /** The name or ARN passed to ssm:GetParameter */
+  readonly name: string;
+  readonly parameterArn: string;
+  readonly parameterName: string;
+  readonly parameterType: ssm.ParameterType;
+}
+
+function importStringParameter(
+  scope: Construct,
+  id: string,
+  options: ImportStringParameterOptions
+): ssm.IStringParameter {
+  const getParameter: custom_resources.AwsSdkCall = {
+    region: options.region,
+    service: "SSM",
+    action: "getParameter", // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/SSM.html#getParameter-property
+    parameters: {
+      Name: options.name,
+    },
+    physicalResourceId: custom_resources.PhysicalResourceId.of(options.parameterArn),
+  };
+
+  class Import extends ParameterBase {
+    public readonly parameterName = options.parameterName;
+    public readonly parameterArn = options.parameterArn;
+    public readonly parameterType = options.parameterType;
+    public readonly stringValue: string;
+
+    constructor() {
+      super(scope, id);
+
+      const parameter = new custom_resources.AwsCustomResource(this, "Resource", {
+        resourceType: RESOURCE_TYPE,
+        onCreate: getParameter,
+        onUpdate: getParameter,
+        policy: custom_resources.AwsCustomResourcePolicy.fromSdkCalls({
+          resources: custom_resources.AwsCustomResourcePolicy.ANY_RESOURCE,
+        }),
+      });
+
+      this.stringValue = parameter.getResponseField("Parameter.Value");
+    }
+  }
+
+  return new Import();
 }
